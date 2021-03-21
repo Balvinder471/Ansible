@@ -1,0 +1,52 @@
+- name : "Provisioning Hadoop Master and slave nodes on the cloud"
+  hosts : localhost
+  gather_facts : false
+
+  vars_files :
+    - ../key.yaml
+
+  vars_prompt : 
+    - name : cnt
+      prompt : "Enter the no of slave nodes to launch "
+      private : no 
+
+  tasks : 
+    - name : "Provisioning Master Node"
+      ec2 :
+        key_name : "Mumbai-KP"
+        aws_access_key : "{{id}}"
+        aws_secret_key : "{{secret}}"
+        image : "ami-0a9d27a9f4f5c0efc"
+        count : 1
+        group_id : "sg-09ad8a546901e9f5a"
+        assign_public_ip : yes
+        vpc_subnet_id : "subnet-0e656766"
+        instance_type : "t2.micro"
+        state : present
+        region : "ap-south-1"
+        wait : yes
+        instance_tags :
+          Name : master
+      tags : master 
+
+
+  
+    - name : "Provisioning slave nodes"
+      ec2 :
+        key_name : "Mumbai-KP"
+        aws_access_key : "{{id}}"
+        aws_secret_key : "{{secret}}"
+        image : "ami-0a9d27a9f4f5c0efc"
+        count : "{{cnt}}"
+        group_id : "sg-09ad8a546901e9f5a"
+        assign_public_ip : yes
+        vpc_subnet_id : "subnet-0e656766"
+        instance_type : "t2.micro"
+        state : present
+        region : "ap-south-1"
+        wait : yes
+        instance_tags :
+          Name : slave
+      tags : slave      
+         
+    
