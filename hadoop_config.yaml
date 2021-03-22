@@ -40,10 +40,10 @@
         dest : /etc/hadoop/core-site.xml
     
     - name : "Formating the file system"
-      command : pwd
+      command : hadoop namenode -format -force
 
     - name : "Starting the namenode"
-      command : pwd
+      command : hadoop-daemon.sh start namenode
     
 
 - name : "Configuring Slave Node"
